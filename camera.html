@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camera</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background-color: #ffe4e1;
+    }
+
+    nav {
+      background-color: #ffd8d8;
+      padding: 10px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: #333;
+      text-decoration: none;
+      font-size: 1.1em;
+      margin: 0 20px;
+      font-weight: 300;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .main-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      height: 100vh;
+      margin-top: 60px;
+    }
+
+    video, canvas {
+      border: 2px solid #ffd8d8;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      width: 400px;
+      height: 300px;
+      background-color: #000;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #ff9e9e;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    }
+
+    button:hover {
+      background-color: #ff7b7b;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Countdown</a>
+    <a href="present.html">Present</a>
+    <a href="letter.html">Letter</a>
+    <a href="camera.html">Camera</a>
+    <a href="hbd.html">HBD</a>
+  </nav>
+
+  <div class="main-container">
+    <h1>📸 카메라 화면 📸</h1>
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas"></canvas>
+    <button id="capture">사진 찍기</button>
+  </div>
+
+  <script>
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const context = canvas.getContext("2d");
+    const captureButton = document.getElementById("capture");
+
+    // 카메라 시작 함수
+    async function startCamera() {
+      try {
+        // 브라우저 호환성을 위한 설정
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream;
+      } catch (error) {
+        alert("카메라를 사용할 수 없습니다: " + error.message);
+      }
+    }
+
+    // 사진 찍기
+    captureButton.addEventListener("click", () => {
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      alert("사진이 저장되었습니다!");
+    });
+
+    // 카메라 시작
+    startCamera();
+  </script>
+</body>
+</html>

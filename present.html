@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pac-Man Game</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background-color: #ffe4e1;
+    }
+
+    nav {
+      background-color: #ffd8d8;
+      padding: 10px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: #333;
+      text-decoration: none;
+      font-size: 1.1em;
+      margin: 0 20px;
+      font-weight: 300;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .main-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    canvas {
+      background-color: #000;
+      width: 400px;
+      height: 400px;
+      border: 2px solid #ffd8d8;
+      margin-bottom: 20px;
+    }
+
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      border: 2px solid #ff9e9e;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      z-index: 2000;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #popup img {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    #popup.hidden {
+      display: none;
+    }
+
+    #popup button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #ff9e9e;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    #popup button:hover {
+      background-color: #ff7b7b;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Countdown</a>
+    <a href="present.html">Present</a>
+    <a href="letter.html">Letter</a>
+    <a href="camera.html">Camera</a>
+    <a href="hbd.html">HBD</a>
+  </nav>
+
+  <div class="main-container">
+    <h1>🎮 선물 찾기 🎮</h1>
+    <canvas id="pacman"></canvas>
+    <div id="popup" class="hidden">
+        <p>🎉 축하합니다! 🎉</p>
+        <button onclick="closePopup()">닫기</button>
+      </div>      
+  </div>
+
+  <script>
+    const canvas = document.getElementById("pacman");
+    const ctx = canvas.getContext("2d");
+
+    // 캔버스 크기 설정
+    canvas.width = 400;
+    canvas.height = 400;
+
+    // 팩맨과 먹이 데이터
+    const pacman = { x: 200, y: 200, radius: 20, speed: 2, direction: "right" };
+    let pellet = { x: Math.random() * 380 + 10, y: Math.random() * 380 + 10 };
+    let score = 0;
+
+    // 하트 이미지 로드
+    const heartImg = new Image();
+    heartImg.src = "assets/images/heart.png";
+
+    // 팩맨 그리기
+    function drawPacman() {
+      ctx.beginPath();
+      ctx.arc(
+        pacman.x,
+        pacman.y,
+        pacman.radius,
+        Math.PI / 4,
+        (7 * Math.PI) / 4,
+        false
+      );
+      ctx.lineTo(pacman.x, pacman.y);
+      ctx.fillStyle = "yellow";
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    // 하트 그리기
+    function drawPellet() {
+      ctx.drawImage(heartImg, pellet.x - 16, pellet.y - 16, 32, 32);
+    }
+
+    // 팩맨 움직이기
+    function movePacman() {
+      if (pacman.direction === "right") pacman.x += pacman.speed;
+      if (pacman.direction === "left") pacman.x -= pacman.speed;
+      if (pacman.direction === "up") pacman.y -= pacman.speed;
+      if (pacman.direction === "down") pacman.y += pacman.speed;
+
+      // 경계 충돌 처리
+      if (pacman.x - pacman.radius < 0) pacman.x = pacman.radius;
+      if (pacman.x + pacman.radius > canvas.width) pacman.x = canvas.width - pacman.radius;
+      if (pacman.y - pacman.radius < 0) pacman.y = pacman.radius;
+      if (pacman.y + pacman.radius > canvas.height) pacman.y = canvas.height - pacman.radius;
+    }
+
+    // 먹이와의 충돌 감지
+    function detectCollision() {
+      const dx = pacman.x - pellet.x;
+      const dy = pacman.y - pellet.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < pacman.radius + 16) {
+        score++;
+        pellet = { x: Math.random() * 380 + 10, y: Math.random() * 380 + 10 };
+      }
+    }
+
+    // 점수 표시
+    function drawScore() {
+      ctx.fillStyle = "white";
+      ctx.font = "16px Arial";
+      ctx.fillText("Score: " + score, 10, 20);
+    }
+
+    // 팝업 표시
+    function showPopup() {
+      const popup = document.getElementById("popup");
+      popup.classList.remove("hidden");
+    }
+
+    function closePopup() {
+      const popup = document.getElementById("popup");
+      popup.classList.add("hidden");
+    }
+
+    // 게임 루프
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); // 캔버스 초기화
+      drawPacman(); // 팩맨 그리기
+      drawPellet(); // 하트 그리기
+      drawScore(); // 점수 그리기
+      movePacman(); // 팩맨 움직임 처리
+      detectCollision(); // 충돌 감지
+
+      if (score >= 28) {
+        showPopup(); // 점수 28점 이상일 때 팝업 표시
+        return; // 루프 종료
+      }
+
+      requestAnimationFrame(gameLoop); // 다음 프레임 요청
+    }
+
+    // 키보드 입력 처리
+    window.addEventListener("keydown", (event) => {
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
+        event.preventDefault();
+        if (event.key === "ArrowRight") pacman.direction = "right";
+        if (event.key === "ArrowLeft") pacman.direction = "left";
+        if (event.key === "ArrowUp") pacman.direction = "up";
+        if (event.key === "ArrowDown") pacman.direction = "down";
+      }
+    });
+
+    gameLoop();
+  </script>
+</body>
+</html>
