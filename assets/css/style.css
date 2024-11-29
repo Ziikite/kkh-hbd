@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* 전체 화면 스타일 */
 body {
   margin: 0;
@@ -10,6 +11,26 @@ body {
   flex-direction: column;
 }
 
+=======
+/* 글로벌 스타일 - 배경 이미지 설정 */
+body {
+  font-family: 'Bagel Fat One', cursive;
+  margin: 0;
+  padding: 0;
+  background-image: url('../images/bg.png'); /* 이미지 파일 경로 설정 */
+  background-size: cover; /* 배경 크기 조정 */
+  background-repeat: no-repeat; /* 반복 방지 */
+  background-attachment: fixed; /* 고정 배경 */
+  background-position: center; /* 중앙 정렬 */
+  color: #333;
+  text-align: center;
+}
+
+/* 기타 텍스트 스타일 */
+h1, h2, h3, p, nav, a, button {
+  color: #333; /* 배경과 대비되는 텍스트 색상 */
+}
+>>>>>>> 738ab07 (Initial commit)
 /* 내비게이션 바 */
 nav {
   background-color: #ffd8d8; /* 연한 핑크색 */

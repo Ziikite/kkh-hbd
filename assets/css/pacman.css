@@ -2,13 +2,25 @@
 body {
     margin: 0;
     padding: 0;
+<<<<<<< HEAD
     font-family: Arial, sans-serif;
+=======
+>>>>>>> 738ab07 (Initial commit)
     background-color: #ffe4e1;
     height: 100vh;
     display: flex;
     flex-direction: column;
   }
+<<<<<<< HEAD
   
+=======
+
+/* Google Fonts 적용 */
+body, h1, h2, h3, p, nav, a, button {
+  font-family: 'Bagel Fat One', cursive;
+}
+
+>>>>>>> 738ab07 (Initial commit)
   /* 내비게이션 바 */
   nav {
     background-color: #ffd8d8;
