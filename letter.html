@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: 'Bagel Fat One', cursive;
+      background-image: url("assets/images/bg.png");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center top;
+      overflow-x: hidden;
+    }
+
+    nav {
+      background-color: rgba(249, 255, 212, 0.9);
+      padding: 10px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      z-index: 1000;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    }
+
+    nav a {
+      color: #333;
+      text-decoration: none;
+      font-size: 1.1em;
+      margin: 0 20px;
+      font-weight: 300;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .rolling-paper-container {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      margin-top: 60px;
+      overflow: hidden;
+    }
+
+    .memo {
+      position: absolute;
+      width: 200px; /* 메모 크기 */
+      height: 160px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px;
+      font-size: 0.9em;
+      line-height: 1.2;
+      transform: rotate(var(--rotation));
+      animation: float 6s infinite ease-in-out;
+    }
+
+    .memo:hover {
+      transform: scale(1.1) rotate(var(--rotation));
+      box-shadow: 8px 8px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Countdown</a>
+    <a href="present.html">Present</a>
+    <a href="letter.html">Letter</a>
+    <a href="camera.html">Camera</a>
+    <a href="hbd.html">HBD</a>
+  </nav>
+
+  <div class="rolling-paper-container" id="container">
+    <!-- 초기 메모 -->
+  </div>
+
+  <script>
+    const container = document.getElementById("container");
+    let messages = [];
+
+    // CSV 파일에서 데이터 불러오기
+    async function fetchCSVData() {
+      const response = await fetch("assets/data/msg.csv"); // CSV 파일 경로
+      const data = await response.text();
+      const rows = data.split("\n").slice(1); // 첫 번째 행 제외 (헤더 제거)
+      messages = rows.map(row => row.split(",")[1]?.trim()); // 텍스트만 추출
+      initMemos(); // 메모 초기화
+    }
+
+    // 랜덤 메모 생성 함수
+    function createRandomMemo(text) {
+      const memo = document.createElement("div");
+      memo.className = "memo";
+      memo.textContent = text;
+
+      // 랜덤 위치 및 회전
+      memo.style.top = `${Math.random() * (window.innerHeight - 200) + window.scrollY}px`;
+      memo.style.left = `${Math.random() * (window.innerWidth - 220)}px`;
+      memo.style.setProperty("--rotation", `${Math.random() * 20 - 10}deg`);
+
+      container.appendChild(memo);
+    }
+
+    // 초기 메모 생성
+    function initMemos() {
+      for (let i = 0; i < 30; i++) {
+        const randomIndex = Math.floor(Math.random() * messages.length);
+        createRandomMemo(messages[randomIndex]);
+      }
+    }
+
+    // 무한 스크롤 이벤트
+    window.addEventListener("scroll", () => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+        // 새 메모 10개 추가
+        for (let i = 0; i < 10; i++) {
+          const randomIndex = Math.floor(Math.random() * messages.length);
+          createRandomMemo(messages[randomIndex]);
+        }
+      }
+    });
+
+    // CSV 데이터 로드 및 초기화
+    fetchCSVData();
+  </script>
+</body>
+</html>

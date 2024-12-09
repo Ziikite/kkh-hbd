@@ -3,38 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-=======
-  <link rel="stylesheet" href="assets/css/pacman.css">
+  <title>Present</title>
   <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&display=swap" rel="stylesheet">
-
->>>>>>> 738ab07 (Initial commit)
-  <title>Pac-Man Game</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow: hidden;
-<<<<<<< HEAD
-      font-family: Arial, sans-serif;
-      background-color: #ffe4e1;
-    }
-
-    nav {
-      background-color: #ffd8d8;
-=======
-      background-image: url("assets/images/bg.png"); /* 배경 이미지 */
+      font-family: 'Bagel Fat One', cursive;
+      background-image: url("assets/images/bg.png");
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
-      font-family: 'Bagel Fat One', cursive; /* 글로벌 폰트 */
+      overflow: hidden; /* 상하좌우 화살표 입력 시 스크롤 방지 */
     }
 
     nav {
-      background-color: rgba(249, 255, 212, 0.9); /* 살짝 투명한 연노란색 */
->>>>>>> 738ab07 (Initial commit)
+      background-color: rgba(249, 255, 212, 0.9);
       padding: 10px;
       position: fixed;
       top: 0;
@@ -42,10 +28,7 @@
       display: flex;
       justify-content: center;
       z-index: 1000;
-<<<<<<< HEAD
-=======
-      border-bottom: 2px solid rgba(255, 255, 255, 0.5); /* 연한 테두리 */
->>>>>>> 738ab07 (Initial commit)
+      border-bottom: 2px solid rgba(255, 255, 255, 0.5);
     }
 
     nav a {
@@ -65,20 +48,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
       flex-direction: column;
       text-align: center;
+      height: 100vh;
+      margin-top: 60px;
     }
 
     canvas {
       background-color: #000;
       width: 400px;
       height: 400px;
-<<<<<<< HEAD
-      border: 2px solid #ffd8d8;
-=======
-      border: 4px solid #FFD700; /* 선명한 노란색 테두리 */
->>>>>>> 738ab07 (Initial commit)
+      border: 4px solid rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
       margin-bottom: 20px;
     }
 
@@ -87,44 +68,27 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-<<<<<<< HEAD
       background: #fff;
-      border: 2px solid #ff9e9e;
-=======
-      background: #fff; /* 팝업 창 흰색 */
-      border: 4px solid #FFD700; /* 팝업 테두리 노란색 */
->>>>>>> 738ab07 (Initial commit)
+      border: 4px solid #FFD700;
       padding: 20px;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
       z-index: 2000;
       text-align: center;
-      display: flex;
+      display: none;
       flex-direction: column;
       align-items: center;
-<<<<<<< HEAD
-=======
-      font-family: 'Bagel Fat One', cursive;
       border-radius: 10px;
->>>>>>> 738ab07 (Initial commit)
     }
 
-    #popup img {
-      width: 100px;
-      margin-bottom: 20px;
-    }
-
-    #popup.hidden {
-      display: none;
+    #popup p {
+      font-size: 18px;
+      margin-bottom: 10px;
     }
 
     #popup button {
       padding: 10px 20px;
       border: none;
-<<<<<<< HEAD
-      background-color: #ff9e9e;
-=======
-      background-color: #FFD700; /* 버튼 색상 */
->>>>>>> 738ab07 (Initial commit)
+      background-color: #FFD700;
       color: white;
       font-size: 16px;
       cursor: pointer;
@@ -132,11 +96,7 @@
     }
 
     #popup button:hover {
-<<<<<<< HEAD
-      background-color: #ff7b7b;
-=======
-      background-color: #FFC107; /* 버튼 호버 색상 */
->>>>>>> 738ab07 (Initial commit)
+      background-color: #FFC107;
     }
   </style>
 </head>
@@ -150,16 +110,16 @@
   </nav>
 
   <div class="main-container">
-    <h1>🎮 선물 찾기 🎮</h1>
-    <canvas id="pacman"></canvas>
-    <div id="popup" class="hidden">
-        <p>🎉 축하합니다! 🎉</p>
-        <button onclick="closePopup()">닫기</button>
-      </div>      
+    <h1>🎁 선물 찾기 🎁</h1>
+    <canvas id="gameCanvas"></canvas>
+    <div id="popup">
+      <p>28점 축하^_^</p>
+      <button onclick="closePopup()">닫기</button>
+    </div>
   </div>
 
   <script>
-    const canvas = document.getElementById("pacman");
+    const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
 
     // 캔버스 크기 설정
@@ -194,7 +154,7 @@
 
     // 하트 그리기
     function drawPellet() {
-      ctx.drawImage(heartImg, pellet.x - 16, pellet.y - 16, 32, 32);
+      ctx.drawImage(heartImg, pellet.x - 16, pellet.y - 16, 32, 32); // 하트 크기 조정
     }
 
     // 팩맨 움직이기
@@ -233,32 +193,32 @@
     // 팝업 표시
     function showPopup() {
       const popup = document.getElementById("popup");
-      popup.classList.remove("hidden");
+      popup.style.display = "flex";
     }
 
     function closePopup() {
       const popup = document.getElementById("popup");
-      popup.classList.add("hidden");
+      popup.style.display = "none";
     }
 
     // 게임 루프
     function gameLoop() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // 캔버스 초기화
-      drawPacman(); // 팩맨 그리기
-      drawPellet(); // 하트 그리기
-      drawScore(); // 점수 그리기
-      movePacman(); // 팩맨 움직임 처리
-      detectCollision(); // 충돌 감지
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawPacman();
+      drawPellet();
+      drawScore();
+      movePacman();
+      detectCollision();
 
       if (score >= 28) {
-        showPopup(); // 점수 28점 이상일 때 팝업 표시
-        return; // 루프 종료
+        showPopup();
+        return;
       }
 
-      requestAnimationFrame(gameLoop); // 다음 프레임 요청
+      requestAnimationFrame(gameLoop);
     }
 
-    // 키보드 입력 처리
+    // 키보드 입력 처리 및 스크롤 방지
     window.addEventListener("keydown", (event) => {
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key)) {
         event.preventDefault();
