@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Birthday Countdown</title>
-  <link rel="stylesheet" href="assets/css/style.css">
   <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&display=swap" rel="stylesheet">
   <style>
     html, body {
@@ -13,7 +12,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background-image: url("assets/images/bg.png"); /* 배경 이미지 */
+      background-image: url("assets/images/bg.png"); /* 원래 배경 이미지 */
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
@@ -58,6 +57,16 @@
       font-size: 2em;
       color: #333;
     }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
   </style>
 </head>
 <body>
@@ -71,10 +80,106 @@
 
   <div class="center-content">
     <h1>🎉 생일까지 남은 시간 🎉</h1>
-    <div id="countdown">Loading...</div>
+    <!--<div id="countdown">Loading...</div>-->
     <canvas id="confetti"></canvas>
   </div>
 
-  <script src="assets/js/countdown.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const canvas = document.getElementById("confetti");
+      const ctx = canvas.getContext("2d");
+      const message = document.querySelector("h1");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+      const particleCount = 300;
+      const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#FFD433"];
+
+      class Particle {
+        constructor(x, y, dx, dy, size, color) {
+          this.x = x;
+          this.y = y;
+          this.dx = dx;
+          this.dy = dy;
+          this.size = size;
+          this.color = color;
+        }
+
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.fill();
+        }
+
+        update() {
+          this.x += this.dx;
+          this.y += this.dy;
+
+          if (this.y > canvas.height) {
+            this.y = 0;
+            this.x = Math.random() * canvas.width;
+          }
+        }
+      }
+
+      function startConfetti() {
+        for (let i = 0; i < particleCount; i++) {
+          const size = Math.random() * 4 + 1;
+          const x = Math.random() * canvas.width;
+          const y = Math.random() * canvas.height;
+          const dx = Math.random() * 2 - 1;
+          const dy = Math.random() * 3 + 1;
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          particles.push(new Particle(x, y, dx, dy, size, color));
+        }
+
+        function animate() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          particles.forEach((particle) => {
+            particle.update();
+            particle.draw();
+          });
+          requestAnimationFrame(animate);
+        }
+
+        animate();
+      }
+
+      const today = new Date();
+      const birthday = new Date(today.getFullYear(), 11, 28); // 생일 설정 (12월 28일)
+
+      if (today.toDateString() === birthday.toDateString()) {
+        message.textContent = "🎉 오늘은 생일입니다! 축하합니다! 🎉";
+        startConfetti();
+      } else {
+        const diff = birthday - today;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        message.textContent = `🎉 생일까지 남은 시간: ${days}일 ${hours}시간 ${minutes}분 ${seconds}초 🎉`;
+
+        setInterval(() => {
+          const now = new Date();
+          const remaining = birthday - now;
+
+          if (remaining <= 0) {
+            message.textContent = "🎉 오늘은 생일입니다! 축하합니다! 🎉";
+            startConfetti();
+          } else {
+            const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((remaining / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((remaining / (1000 * 60)) % 60);
+            const seconds = Math.floor((remaining / 1000) % 60);
+
+            message.textContent = `🎉 생일까지 남은 시간: ${days}일 ${hours}시간 ${minutes}분 ${seconds}초 🎉`;
+          }
+        }, 1000);
+      }
+    });
+  </script>
 </body>
 </html>
