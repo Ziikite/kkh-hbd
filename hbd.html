@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday</title>
+  <!-- 폰트 로드 -->
+  <link href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: 'Bagel Fat One', cursive; /* 웹사이트 전체에 폰트 적용 */
+      background-image: url("assets/images/bg.png"); /* 기존 배경 이미지 사용 */
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center top;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    nav {
+      background-color: rgba(249, 255, 212, 0.9);
+      padding: 10px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      z-index: 1000;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    }
+
+    nav a {
+      color: #333;
+      text-decoration: none;
+      font-size: 1.1em;
+      margin: 0 20px;
+      font-weight: 300;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    #player {
+      width: 100%;
+      max-width: 560px;
+      height: 315px;
+      border: none; /* 테두리 제거 */
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5); /* 박스 그림자 추가 */
+    }
+  </style>
+</head>
+<body>
+  <!-- 내비게이션 바 -->
+  <nav>
+    <a href="index.html">Countdown</a>
+    <a href="present.html">Present</a>
+    <a href="letter.html">Letter</a>
+    <a href="camera.html">Camera</a>
+    <a href="hbd.html">HBD</a>
+  </nav>
+
+  <!-- YouTube Player -->
+  <iframe 
+    id="player"
+    src="https://www.youtube.com/embed/9lAT1N1swVU?start=395&end=438&autoplay=1&controls=0&modestbranding=1&rel=0"
+    title="Happy Birthday Video"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen>
+  </iframe>
+</body>
+</html>
